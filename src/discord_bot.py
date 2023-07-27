@@ -5,6 +5,7 @@ import dotenv
 import requests
 from discord.errors import DiscordException
 from discord.ext import commands
+from discord.ext.commands import Command
 
 dotenv.load_dotenv()
 
@@ -24,6 +25,11 @@ client = commands.Bot(command_prefix="!", intents=intents)
 @client.event
 async def on_ready():
     print(f"Logged in {client.user.name}")  # type: ignore
+
+
+@client.command()
+async def teste(ctx):
+    await ctx.channel.send("Testado")
 
 if os.getenv('DISCORD-BOT-TOKEN') is not None:
     client.run(os.environ['DISCORD-BOT-TOKEN'])
