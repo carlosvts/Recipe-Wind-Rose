@@ -4,26 +4,27 @@ import discord
 import dotenv
 import requests
 from discord.errors import DiscordException
+from discord.ext import commands
 
 dotenv.load_dotenv()
 
 # Discord Bot Connection
 
-
-class MyClient(discord.Client):
-    async def on_ready(self):
-        print(f"Logged in {self.user}")
-
-    async def on_message(self, message):
-        print(f'Message from {message.author}: {message.content}')
-
-
 # Giving bot permissions
 intents = discord.Intents()
 intents.messages = True
 intents.message_content = True
+intents.typing = True
+intents.emojis_and_stickers = True
 
-client = MyClient(intents=intents)
+# Creating Client
+client = commands.Bot(command_prefix="!", intents=intents)
+
+
+@client.event
+async def on_ready():
+    print(f"Logged in {client.user.name}")  # type: ignore
+
 if os.getenv('DISCORD-BOT-TOKEN') is not None:
     client.run(os.environ['DISCORD-BOT-TOKEN'])
 else:
