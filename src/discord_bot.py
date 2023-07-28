@@ -9,6 +9,17 @@ from discord.ext.commands import Command
 
 dotenv.load_dotenv()
 
+# Spoonacular API
+# Defining base URL'S
+BASE_RECIPES_URL = "https://api.spoonacular.com/recipes/"
+BASE_INGREDIENTS_URL = "https://api.spoonacular.com/food/ingredients/search"
+API_KEY = "?apiKey=" + os.environ['SPOONACULAR-API-KEY']
+
+
+def get_recipes(endpoint):
+    ...
+
+
 # Discord Bot Connection
 
 # Giving bot permissions
@@ -27,7 +38,7 @@ async def on_ready():
     print(f"Logged in {client.user.name}")  # type: ignore
 
 
-@client.command()
+@client.command()  # type: ignore
 async def teste(ctx):
     await ctx.channel.send("Testado")
 
