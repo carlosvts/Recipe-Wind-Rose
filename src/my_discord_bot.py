@@ -2,10 +2,11 @@ import os
 
 import discord
 import dotenv
-import requests
+from discord import app_commands
 from discord.errors import DiscordException
 from discord.ext import commands
-from discord.ext.commands import Command
+from discord.ext.commands import Context
+from discord.interactions import Interaction
 
 dotenv.load_dotenv()
 
@@ -13,6 +14,7 @@ dotenv.load_dotenv()
 
 # Giving bot permissions
 intents = discord.Intents()
+intents.guilds = True
 intents.messages = True
 intents.message_content = True
 intents.typing = True
@@ -28,9 +30,10 @@ async def on_ready():
 
 
 @client.command()  # type: ignore
-async def teste(ctx):
-    await ctx.channel.send("Testado")
+async def teste(ctx: Context):
+    await ctx.channel.send("Testado")  # type: ignore
 
+# Run the bot
 if os.getenv('DISCORD-BOT-TOKEN') is not None:
     client.run(os.environ['DISCORD-BOT-TOKEN'])
 else:
