@@ -1,3 +1,4 @@
+import asyncio
 import os
 
 import dotenv
@@ -19,7 +20,7 @@ class RecipeAPI():
     def __init__(self, api_key=API_KEY) -> None:
         self.api_key = API_KEY
 
-    def get_recipes_by_ingredients(self, ingredients: str):
+    async def get_recipes_by_ingredients(self, ingredients: str):
         """
         Uses request library to connect with Spoonacular API and find
         good recipes based on user-typed ingredients
@@ -39,8 +40,13 @@ class RecipeAPI():
         print("API ENDPOINT", self.API_ENDPOINT)
         response = requests.get(self.API_ENDPOINT)
         print(response.status_code)
-        print(response.content)
+        print(response.json())
+        return response.json()
 
 
-recipe = RecipeAPI()
-recipe.get_recipes_by_ingredients("apples,flour,suggar")
+async def main():
+    recipe = RecipeAPI()
+    await recipe.get_recipes_by_ingredients("apples,flour,suggar")
+
+
+asyncio.run(main())
