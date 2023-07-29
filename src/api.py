@@ -88,6 +88,10 @@ class DataFetcher():
         for ingredient, amount in missed_ingredients.items():
             print("-", ingredient, ":", amount)
 
+        if unused_ingredients:
+            print("\nFor this recipe, you don't need the following ingredients:")
+            print(", ".join(unused_ingredients))
+
 
 async def test():
     """
