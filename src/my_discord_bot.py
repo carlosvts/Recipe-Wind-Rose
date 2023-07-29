@@ -1,40 +1,26 @@
 import os
 
-import discord
 import dotenv
-from discord import app_commands
-from discord.errors import DiscordException
-from discord.ext import commands
-from discord.ext.commands import Context
-from discord.interactions import Interaction
+import interactions
+from interactions import SlashContext, slash_command
 
 dotenv.load_dotenv()
 
-# Discord Bot Connection
-
-# Giving bot permissions
-intents = discord.Intents()
-intents.guilds = True
-intents.messages = True
-intents.message_content = True
-intents.typing = True
-intents.emojis_and_stickers = True
-
 # Creating Client
-client = commands.Bot(command_prefix="!", intents=intents)
+bot = interactions.Client()
+
+# listen is like event from discord.py
 
 
-@client.event
-async def on_ready():
-    print(f"Logged in {client.user.name}")  # type: ignore
+@interactions.listen()
+async def on_startup():
+    print("Bot is ready!")
 
 
-@client.command()  # type: ignore
-async def teste(ctx: Context):
-    await ctx.channel.send("Testado")  # type: ignore
+@slash_command(name="sim", description="por favor agora tem que ir")
+async def por_favor(ctx: SlashContext):
+    await ctx.send(f"Hi, {bot.user.mention}")
+
 
 # Run the bot
-if os.getenv('DISCORD-BOT-TOKEN') is not None:
-    client.run(os.environ['DISCORD-BOT-TOKEN'])
-else:
-    raise DiscordException("Invalid Token")
+bot.start(token=os.getenv('DISCORD-BOT-TOKEN'))
