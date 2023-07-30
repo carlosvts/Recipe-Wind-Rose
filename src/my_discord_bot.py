@@ -22,14 +22,9 @@ async def on_startup():
     print("Bot is ready!")
 
 
-@slash_command(name="sim", description="por favor agora tem que ir")
-async def por_favor(ctx: SlashContext):
-    await ctx.send(f"Hi, {ctx.author.mention}")
-
-
 @slash_command(
-    name="recipe-by-ingredient", description="Get delicious recipes "
-    "based on ingredients in your fridge!")
+    name="recipe-by-ingredient", description=(
+        "Get delicious recipes based on ingredients in your fridge!"))
 @slash_option(
     name="ingredients",
     description="Type comma-separated ingredients here!",
@@ -37,24 +32,41 @@ async def por_favor(ctx: SlashContext):
     opt_type=OptionType.STRING
 )
 async def fetch_recipe_and_process_data(ctx: SlashContext, ingredients: str):
-    recipe_result = await recipe_api.get_recipes_by_ingredients(ingredients)
-    _data_fetcher = DataFetcher(recipe_result)
+    recipe_response = await recipe_api.get_recipes_by_ingredients(ingredients)
+    _data_fetcher = DataFetcher(recipe_response)
 
     # Extracting results from DataFetcher
-    recipe_name, recipe_image = _data_fetcher.extract_recipe_name_and_image(
-        recipe_result)
+    recipe_name, recipe_url = _data_fetcher.extract_recipe_name_and_image(
+        recipe_response
+    )
 
     ingredients_have = _data_fetcher.extract_used_ingredients(
-        recipe_result)
+        recipe_response
+    )
 
     missed_ingredients = _data_fetcher.extract_missed_ingredients(
-        recipe_result)
+        recipe_response
+    )
 
     unused_ingredients = _data_fetcher.extract_unused_ingredients(
-        recipe_result)
+        recipe_response
+    )
 
+    recipe_final_result = _data_fetcher.format_response_to_user(
+        recipe_name, ingredients_have, missed_ingredients, unused_ingredients
+    )
 
-    ctx.send(embed=)
+    recipe_img = interactions.Embed(
+        "Delicious!", url=recipe_url,  # type: ignore
+        images=interactions.EmbedAttachment(recipe_url)  # type: ignore
+    )
+
+    await ctx.send(embed=recipe_img)
+    await ctx.send(content=recipe_final_result)
 
 # Run the bot
 bot.start(token=os.getenv('DISCORD-BOT-TOKEN'))
+
+
+# PARA ENVIAR IMAGENS interactions.EmbedAttachment(url_da_imagem)
+# primeiro enviar texto depois imagem
