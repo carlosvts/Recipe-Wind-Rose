@@ -1,6 +1,7 @@
 .vscode
 python_310_version
 venv_3.10
+anotacoes.txt
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
