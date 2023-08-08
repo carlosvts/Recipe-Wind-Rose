@@ -22,6 +22,10 @@ class RecipeAPI():
     def __init__(self, api_key=API_KEY) -> None:
         self.api_key = API_KEY
 
+    async def get_recipe(self, recipe: str, cuisine: str | None, diet: str | None):
+        recipe = recipe.strip()
+        recipe = recipe.replace(" ", "")
+
     async def get_recipes_by_ingredients(self, ingredients: str):
         """
         Uses request library to connect with Spoonacular API and find

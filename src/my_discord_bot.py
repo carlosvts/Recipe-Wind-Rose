@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 import dotenv
 import interactions
@@ -63,6 +64,38 @@ async def fetch_recipe_and_process_data(ctx: SlashContext, ingredients: str):
 
     await ctx.send(embed=recipe_img)
     await ctx.send(content=recipe_final_result)
+
+
+@slash_command(name="search-recipe", description=(
+    "Search some delicious recipes, they will flow like wind")
+)
+@slash_option(
+    name="recipe",
+    description="Type some recipe (Example: pasta)",
+    required=True,
+    opt_type=OptionType.STRING
+)
+@slash_option(
+    name="cuisine",
+    description="should add some specific cuisine? you can! (Example: italian)",
+    required=False,
+    opt_type=OptionType.STRING
+
+)
+@slash_option(
+    name="diet",
+    description="Want to add a diet? So here we go (Example: vegetarian)",
+    required=False,
+    opt_type=OptionType.STRING,
+
+)
+async def search_recipe_query(
+    ctx: SlashContext, recipe: str, cuisine: Optional[str] = None,
+    diet: Optional[str] = None
+):
+    ...
+    # Extract the data from api and print here
+    # TODO Diet has some specific things to do, check docs later
 
 # Run the bot
 bot.start(token=os.getenv('DISCORD-BOT-TOKEN'))
