@@ -22,9 +22,34 @@ class RecipeAPI():
     def __init__(self, api_key=API_KEY) -> None:
         self.api_key = API_KEY
 
-    async def get_recipe(self, recipe: str, cuisine: str | None, diet: str | None):
+    async def get_recipe(self,
+                         recipe: str,
+                         cuisine: str | None = None, diet: str | None = None
+                         ):
+        """
+        Get a recipe based on 3 params
+        recipe -> natural human language recipe like Pasta
+        cuisine -> Optional, if user wants some specific cuisine like italian
+        pasta
+        diet -> Optional, if user wants some specific diet like vegetarian  
+        """
+        # Just slicing some typos
         recipe = recipe.strip()
         recipe = recipe.replace(" ", "")
+
+        # Assuming that user only want recipe based on query
+        self.API_ENDPOINT = (BASE_RECIPES_URL +
+                             "complexSearch?" f"query={recipe}")
+        if diet is not None:
+            self.API_ENDPOINT = self.API_ENDPOINT + f"&diet={diet}"
+        if cuisine is not None:
+            self.API_ENDPOINT = f"&cuisine={cuisine}"
+
+        print("API ENDPOINT", self.API_ENDPOINT)
+        # TODO MISSING API KEY AS PARAM
+        response = requests.get(self.API_ENDPOINT)
+        print("STATUSCODE: ", response.status_code)
+        print(response.json)
 
     async def get_recipes_by_ingredients(self, ingredients: str):
         """
@@ -55,24 +80,10 @@ if __name__ == '__main__':
         """
             Just a test to see if i catch correctly the info from the API
         """
-        recipe = RecipeAPI()
+        # recipe = RecipeAPI()
 
-        recipe_info = await recipe.get_recipes_by_ingredients(
-            "apples, flour, sugar")
-
-        data_fetcher = DataFetcher(recipe_info)
-
-        recipe_name, recipe_image = data_fetcher.extract_recipe_name_and_image(
-            recipe_info)
-        ingredients_have = data_fetcher.extract_used_ingredients(recipe_info)
-        missed_ingredients = data_fetcher.extract_missed_ingredients(
-            recipe_info)
-        unused_ingredients = data_fetcher.extract_unused_ingredients(
-            recipe_info)
-
-        data_fetcher.format_response_to_user(
-            recipe_name, ingredients_have,
-            missed_ingredients, unused_ingredients
-        )
+        # recipeTest = await recipe.get_recipe("pasta")
+        # return recipeTest
+        ...
 
     asyncio.run(test())

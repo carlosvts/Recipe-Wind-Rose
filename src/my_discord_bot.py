@@ -77,7 +77,7 @@ async def fetch_recipe_and_process_data(ctx: SlashContext, ingredients: str):
 )
 @slash_option(
     name="cuisine",
-    description="should add some specific cuisine? you can! (Example: italian)",
+    description="should add some specific cuisine? you can!(Example: italian)",
     required=False,
     opt_type=OptionType.STRING
 
