@@ -13,14 +13,15 @@ dotenv.load_dotenv()
 # REMINDER: the Spoonacular url is case sensitive (camelCase)
 BASE_RECIPES_URL = "https://api.spoonacular.com/recipes/"
 BASE_INGREDIENTS_URL = "https://api.spoonacular.com/food/ingredients/search"
-API_KEY = "?apiKey=" + os.environ['SPOONACULAR-API-KEY'] + "&"
+API_KEY = os.environ['SPOONACULAR-API-KEY']
+BY_URL_API_KEY = "?apiKey=" + API_KEY + "&"
 
 
 class RecipeAPI():
     API_ENDPOINT = ""
 
-    def __init__(self, api_key=API_KEY) -> None:
-        self.api_key = API_KEY
+    def __init__(self, api_key=BY_URL_API_KEY) -> None:
+        self.api_key = BY_URL_API_KEY
 
     async def get_recipe(self,
                          recipe: str,
@@ -37,19 +38,20 @@ class RecipeAPI():
         recipe = recipe.strip()
         recipe = recipe.replace(" ", "")
 
+        _headers = {
+            'x-api-key': API_KEY,
+        }
         # Assuming that user only want recipe based on query
-        self.API_ENDPOINT = (BASE_RECIPES_URL +
-                             "complexSearch?" f"query={recipe}")
+        self.API_ENDPOINT = BASE_RECIPES_URL + "complexSearch"
         if diet is not None:
-            self.API_ENDPOINT = self.API_ENDPOINT + f"&diet={diet}"
+            _headers['diet'] = diet
         if cuisine is not None:
-            self.API_ENDPOINT = f"&cuisine={cuisine}"
+            _headers['cuisine'] = cuisine
 
         print("API ENDPOINT", self.API_ENDPOINT)
-        # TODO MISSING API KEY AS PARAM
-        response = requests.get(self.API_ENDPOINT)
+        response = requests.get(self.API_ENDPOINT, headers=_headers)
         print("STATUSCODE: ", response.status_code)
-        print(response.json)
+        print(response.json())
 
     async def get_recipes_by_ingredients(self, ingredients: str):
         """
@@ -65,7 +67,7 @@ class RecipeAPI():
         ingredients = ingredients.replace(",", ",+")
 
         self.API_ENDPOINT = (BASE_RECIPES_URL + "findByIngredients"
-                             + API_KEY + f"ingredients={ingredients}"
+                             + BY_URL_API_KEY + f"ingredients={ingredients}"
                              + "&number=1")
 
         print("API ENDPOINT", self.API_ENDPOINT)
@@ -80,10 +82,10 @@ if __name__ == '__main__':
         """
             Just a test to see if i catch correctly the info from the API
         """
-        # recipe = RecipeAPI()
+        recipe = RecipeAPI()
 
-        # recipeTest = await recipe.get_recipe("pasta")
-        # return recipeTest
+        recipeTest = await recipe.get_recipe("pasta", "italian", "vegan")
+        return recipeTest
         ...
 
     asyncio.run(test())
