@@ -101,7 +101,7 @@ async def search_recipe_query(
 
     recipe_image = interactions.Embed(
         title="Delicious!", url=recipe_url,
-        images=interactions.EmbedAttachment(recipe_url)  # type: ignore # TODO
+        images=interactions.EmbedAttachment(recipe_url)  # type: ignore
     )
 
     await ctx.send(embed=recipe_image)
