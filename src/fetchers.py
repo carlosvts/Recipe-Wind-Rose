@@ -67,3 +67,28 @@ class DataFetcher():
             """
 
         return output
+
+
+class RecipeFetcher():
+    """
+    A similar DataFetcher, but used to fetch get_recipe method from RecipeApi
+    """
+
+    def __init__(self, data: dict) -> None:
+        self.data = data
+
+    def fetch_info(self):
+        """
+        Fetches info from JSON-like response from RecipeAPI
+        """
+        # Used for getting the first recipe from api_response
+        FIRST_RECIPE_GETTER = self.data['results'][0]
+        RECIPE_NAME = FIRST_RECIPE_GETTER['title']
+        RECIPE_IMAGE = FIRST_RECIPE_GETTER['image']
+
+        # TODO REMOVE THIS LATER, USED ONLY FOR DEBUGGING PORPOUSES
+        print(f"FIRST_RECIPE_GETTER = {FIRST_RECIPE_GETTER}"
+              f"RECIPENAME: {RECIPE_NAME}"
+              f"RECIPEIMAGE: {RECIPE_IMAGE}")
+
+        return RECIPE_NAME, RECIPE_IMAGE

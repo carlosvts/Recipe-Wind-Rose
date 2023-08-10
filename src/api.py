@@ -4,7 +4,7 @@ import os
 import dotenv
 import requests
 
-from data_fetcher import DataFetcher
+from fetchers import DataFetcher, RecipeFetcher
 
 dotenv.load_dotenv()
 
@@ -41,7 +41,6 @@ class RecipeAPI():
         _headers = {
             'x-api-key': API_KEY,
         }
-        # Assuming that user only want recipe based on query
         self.API_ENDPOINT = BASE_RECIPES_URL + "complexSearch"
         if diet is not None:
             _headers['diet'] = diet
@@ -52,6 +51,8 @@ class RecipeAPI():
         response = requests.get(self.API_ENDPOINT, headers=_headers)
         print("STATUSCODE: ", response.status_code)
         print(response.json())
+        recipe_info = response.json()
+        return recipe_info
 
     async def get_recipes_by_ingredients(self, ingredients: str):
         """
@@ -85,6 +86,11 @@ if __name__ == '__main__':
         recipe = RecipeAPI()
 
         recipeTest = await recipe.get_recipe("pasta", "italian", "vegan")
+
+        fetcher = RecipeFetcher(recipeTest)
+        fetcher.fetch_info()
+        print("\n")
+
         return recipeTest
         ...
 

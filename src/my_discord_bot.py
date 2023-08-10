@@ -5,7 +5,8 @@ import dotenv
 import interactions
 from interactions import OptionType, SlashContext, slash_command, slash_option
 
-from api import DataFetcher, RecipeAPI
+from api import RecipeAPI
+from fetchers import DataFetcher, RecipeFetcher
 
 dotenv.load_dotenv()
 
@@ -15,14 +16,13 @@ recipe_api = RecipeAPI()
 # Creating Client
 bot = interactions.Client()
 
-# listen is like event from discord.py
-
 
 @interactions.listen()
 async def on_startup():
     print("Bot is ready!")
 
 
+# ------------------------- RECIPE BY INGREDIENT COMMAND ---------------------
 @slash_command(
     name="recipe-by-ingredient", description=(
         "Get delicious recipes based on ingredients in your fridge!"))
@@ -65,6 +65,8 @@ async def fetch_recipe_and_process_data(ctx: SlashContext, ingredients: str):
     await ctx.send(embed=recipe_img)
     await ctx.send(content=recipe_final_result)
 
+# --------------------- SEARCH RECIPE COMMAND -------------------------------
+
 
 @slash_command(name="search-recipe", description=(
     "Search some delicious recipes, they will flow like wind")
@@ -93,7 +95,9 @@ async def search_recipe_query(
     ctx: SlashContext, recipe: str, cuisine: Optional[str] = None,
     diet: Optional[str] = None
 ):
-    ...
+    _recipe_response = await recipe_api.get_recipe(recipe, cuisine, diet)
+    _data_fetcher = RecipeFetcher(_recipe_response)
+
     # Extract the data from api and print here
     # TODO Diet has some specific things to do, check docs later
 
