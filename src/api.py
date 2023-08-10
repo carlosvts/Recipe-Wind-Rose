@@ -32,25 +32,33 @@ class RecipeAPI():
         recipe -> natural human language recipe like Pasta
         cuisine -> Optional, if user wants some specific cuisine like italian
         pasta
-        diet -> Optional, if user wants some specific diet like vegetarian  
+        diet -> Optional, if user wants some specific diet like vegetarian
         """
         # Just slicing some typos
         recipe = recipe.strip()
         recipe = recipe.replace(" ", "")
+        # print("RECIPE INSIDE GETRECIPE METHOD", recipe)
 
         _headers = {
             'x-api-key': API_KEY,
         }
+
+        _params = {
+            'query': recipe,
+            "number": "1",
+        }
         self.API_ENDPOINT = BASE_RECIPES_URL + "complexSearch"
         if diet is not None:
-            _headers['diet'] = diet
+            _params['diet'] = diet
         if cuisine is not None:
-            _headers['cuisine'] = cuisine
+            _params['cuisine'] = cuisine
 
-        print("API ENDPOINT", self.API_ENDPOINT)
-        response = requests.get(self.API_ENDPOINT, headers=_headers)
-        print("STATUSCODE: ", response.status_code)
-        print(response.json())
+        # print("API ENDPOINT", self.API_ENDPOINT)
+        response = requests.get(
+            self.API_ENDPOINT, headers=_headers, params=_params)
+        # print(response.request)
+        # print("STATUSCODE: ", response.status_code)
+        # print(response.json())
         recipe_info = response.json()
         return recipe_info
 
@@ -78,20 +86,21 @@ class RecipeAPI():
         return _recipe_info
 
 
-if __name__ == '__main__':
-    async def test():
-        """
-            Just a test to see if i catch correctly the info from the API
-        """
-        recipe = RecipeAPI()
+# TEST
+# if __name__ == '__main__':
+#     async def test():
+#         """
+#             Just a test to see if i catch correctly the info from the API
+#         """
+#         recipe = RecipeAPI()
 
-        recipeTest = await recipe.get_recipe("pasta", "italian", "vegan")
+#         recipeTest = await recipe.get_recipe("pasta", "italian", "vegan")
 
-        fetcher = RecipeFetcher(recipeTest)
-        fetcher.fetch_info()
-        print("\n")
+#         fetcher = RecipeFetcher(recipeTest)
+#         fetcher.fetch_info()
+#         print("\n")
 
-        return recipeTest
-        ...
+#         return recipeTest
+#         ...
 
-    asyncio.run(test())
+#     asyncio.run(test())

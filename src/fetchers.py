@@ -86,9 +86,14 @@ class RecipeFetcher():
         RECIPE_NAME = FIRST_RECIPE_GETTER['title']
         RECIPE_IMAGE = FIRST_RECIPE_GETTER['image']
 
-        # TODO REMOVE THIS LATER, USED ONLY FOR DEBUGGING PORPOUSES
-        print(f"FIRST_RECIPE_GETTER = {FIRST_RECIPE_GETTER}"
-              f"RECIPENAME: {RECIPE_NAME}"
-              f"RECIPEIMAGE: {RECIPE_IMAGE}")
+        # print(f"FIRST_RECIPE_GETTER = {FIRST_RECIPE_GETTER}"
+        #   f"RECIPENAME: {RECIPE_NAME}"
+        #       f"RECIPEIMAGE: {RECIPE_IMAGE}")
 
         return RECIPE_NAME, RECIPE_IMAGE
+
+    def format_response_to_user(self, recipe_name: str):
+        """
+        self explanatory method
+        """
+        return f"Look at this beautiful {recipe_name}!"

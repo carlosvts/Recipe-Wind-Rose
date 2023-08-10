@@ -58,7 +58,7 @@ async def fetch_recipe_and_process_data(ctx: SlashContext, ingredients: str):
     )
 
     recipe_img = interactions.Embed(
-        "Delicious!", url=recipe_url,  # type: ignore
+        "Delicious!",  # type: ignore
         images=interactions.EmbedAttachment(recipe_url)  # type: ignore
     )
 
@@ -97,13 +97,17 @@ async def search_recipe_query(
 ):
     _recipe_response = await recipe_api.get_recipe(recipe, cuisine, diet)
     _data_fetcher = RecipeFetcher(_recipe_response)
+    recipe_name, recipe_url = _data_fetcher.fetch_info()
 
-    # Extract the data from api and print here
+    recipe_image = interactions.Embed(
+        title="Delicious!", url=recipe_url,
+        images=interactions.EmbedAttachment(recipe_url)  # type: ignore # TODO
+    )
+
+    await ctx.send(embed=recipe_image)
+    await ctx.send(content=_data_fetcher.format_response_to_user(recipe_name))
+
     # TODO Diet has some specific things to do, check docs later
 
 # Run the bot
 bot.start(token=os.getenv('DISCORD-BOT-TOKEN'))
-
-
-# PARA ENVIAR IMAGENS interactions.EmbedAttachment(url_da_imagem)
-# primeiro enviar texto depois imagem
